@@ -6,7 +6,11 @@ import tqdm
 MovieTypes = ['Adventure', 'Animation', 'Children', 'Comedy', 'Fantasy', 'Romance', 'Drama', 'Action', 'Crime', 'Thriller', 'Horror', 'Mystery', 'Sci-Fi', 'IMAX', 'Documentary', 'War', 'Musical', 'Western', 'Film-Noir', '(no genres listed)']
 
 def extract_year(title):
-    return title.split('(')[-1].split(')')[0]
+    result =  title.split('(')[-1].split(')')[0]
+    try:
+        return int(result)
+    except:
+        return 0
 
 def clean_data():
     if not os.path.exists("movies.csv") or not os.path.exists("ratings.csv"):
@@ -15,7 +19,7 @@ def clean_data():
         
     print("Reading data...")
     movies = pd.read_csv("movies.csv")   
-    ratings = pd.read_csv("ratings.csv").iloc[:500000,:]
+    ratings = pd.read_csv("ratings.csv").iloc[:100000,:]
     print("Data read successfully.")
     
     users_avg_rates = {userID : {genre: 0 for genre in MovieTypes} for userID in ratings['userId'].unique()}

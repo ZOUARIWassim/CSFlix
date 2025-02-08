@@ -10,7 +10,7 @@ import numpy as np
 from ModelArchitecture import Model
 import pickle
 
-DataFolder = 'Data/Small_Data'
+DataFolder = 'Data/Large_Data'
 batchSize = 32
 numOutputs = 32
 loss_fn = nn.MSELoss()
