@@ -8,6 +8,7 @@ import torch.optim as optim
 from torch.utils.data import Dataset, DataLoader
 import numpy as np
 from ModelArchitecture import Model
+import pickle
 
 DataFolder = 'Data/Small_Data'
 batchSize = 32
@@ -108,5 +109,15 @@ ModelInfo = {
     'numUsersFeatures': numUsersFeatures,
     'numOutputs': numOutputs,
 }
+
+with open('../Model/scalerMovies.pkl', 'wb') as f:
+    pickle.dump(scalerMovies, f)
+
+with open('../Model/scalerUsers.pkl', 'wb') as f:
+    pickle.dump(scalerUsers, f)
+
+with open('../Model/scalerY.pkl', 'wb') as f:
+    pickle.dump(scalerY, f)
+
 torch.save(ModelInfo, '../Model/ModelInfo.pth')
 torch.save(Model.state_dict(), '../Model/Model.pth')
