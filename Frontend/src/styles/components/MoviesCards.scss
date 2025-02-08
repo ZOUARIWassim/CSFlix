@@ -1,0 +1,65 @@
+.MainContainer{
+    display: flex;
+    flex-direction: column;
+    align-items: first baseline;
+    width: 100%;
+    .Meta{
+        padding: 0px 20px;
+        p{
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #535bf2;
+            font-family: "Poppins", serif;
+        }
+    }
+    .MoviesGrid{
+        display: grid;
+        width: 97%;
+        padding: 20px;
+        grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+        gap: 35px;
+        justify-content: center;
+        padding: 20px;
+        .MovieCard{
+            display: flex;
+            flex-direction: column;
+            justify-content: end;
+            .MovieImg{
+                height: auto;
+                img{
+                    width: 100%;
+                    height: 300px;
+                    object-fit: cover;
+                    border-radius: 10px;
+                    transition: all 0.3s;
+                    &:hover{
+                        transform: scale(1.05);
+                    }
+                }
+            }
+        
+            .MovieInfo{
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+                padding: 10px;
+                background-color: #fff;
+                border-radius: 10px;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                h3{
+                    font-size: 1.5rem;
+                    margin: 0px;
+                    font-weight: 700;
+                    color: #535bf2;
+                    font-family: "Poppins", serif;
+                }
+                p{
+                    font-size: 1rem;
+                    font-weight: 500;
+                    color: #535bf2;
+                    font-family: "Poppins", serif;
+                }
+            }
+        }
+    }
+}

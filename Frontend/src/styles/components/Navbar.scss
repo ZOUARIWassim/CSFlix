@@ -1,0 +1,93 @@
+.Navbar{
+    display: flex;
+    justify-content: space-between;
+    width: 96%;
+    height: 5vh;
+    align-items: center;
+    padding: 1rem 2rem;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    z-index: 100;
+    position : fixed;
+    top: 0;
+    left: 0;
+    .NavbarLogo{
+        p{
+            color: #535bf2;
+            font-weight: 700;
+            font-size: 20px;
+            font-family: "Poppins", serif;
+            background: linear-gradient(90deg, #535bf2, #f1356d);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            cursor: pointer ;
+        }
+    }
+    .SearchBar{
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        svg {
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #535bf2;
+        }
+        input{
+            padding: 0.5rem 1rem;
+            border: none;
+            width: 600px;
+            outline: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            color: #535bf2;
+            font-weight: 700;
+            font-family: "Poppins", serif;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s;
+            &:focus{
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            }
+
+        }
+    }
+    .NavbarMenu{
+        display: flex;
+        
+        ul{
+            display: flex;
+            gap: 20px;
+            button{
+                background-color: transparent;
+                border: none;
+                cursor: pointer;
+                font-size: 1.5rem;
+                color: #535bf2;
+                font-weight: 700;
+                font-size: medium;
+                font-family: "Poppins", serif;
+                transition: color 0.3s;
+                &:hover{
+                    color: #f1356d;
+                }
+                &:hover{
+                    color: #f1356d;
+                }
+            }
+            
+    }
+    .Icon {
+        display: flex;
+        align-items: center;
+        margin-left: 10px;
+        svg {
+            font-size: 2rem;
+            color: #535bf2;
+            cursor: pointer;
+            transition: color 0.3s;
+            &:hover {
+                color: #f1356d;
+            }
+        }
+    }
+}
+}

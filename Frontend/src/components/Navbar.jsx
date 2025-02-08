@@ -1,23 +1,28 @@
 import React from 'react';
 import '../styles/components/Navbar.scss';
+import { MdAccountCircle } from "react-icons/md";
+import { FaSearch } from "react-icons/fa";
+
 
 function Navbar() {
-    const handleClick = function(target) {
-        document.getElementById(target).scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }
+
     return (
         <div className="Navbar">
             <div className="NavbarLogo">
-                <img src={Logo} alt="Cheetraa" />
-                <p>CHEETRAA</p>
+                <p>CSFlix</p>
+            </div>
+            <div className="SearchBar">
+                <input type="text" placeholder="Search for movies, TV shows, genres, etc." />
+                <FaSearch />
             </div>
             <div className="NavbarMenu">
                 <ul>
-                    <li><button className='SpecialButton' onClick={()=> {handleClick('Form')}} >Get Your Early Access</button></li>
-                    <li><button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>Home</button></li>
-                    <li><button onClick={()=> {handleClick('Form')}}>Contact</button></li>
-                    <li><button onClick={()=> {handleClick('AboutUs')}}>About</button></li>
+                    <button>Home</button>
+                    <button>Logout</button>
                 </ul>
+                <div className="Icon">
+                    <MdAccountCircle />
+                </div>
             </div>
         </div>
     );

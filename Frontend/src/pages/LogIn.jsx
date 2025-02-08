@@ -1,5 +1,5 @@
 import React from "react";
-import '../styles/components/LogIn.scss';
+import '../styles/pages/LogIn.scss';
 import { FaUserAlt } from "react-icons/fa";
 import { FaLock } from "react-icons/fa";
 import { useState } from "react";
