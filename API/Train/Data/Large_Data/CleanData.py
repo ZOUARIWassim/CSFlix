@@ -15,12 +15,12 @@ def clean_data():
         
     print("Reading data...")
     movies = pd.read_csv("movies.csv")   
-    ratings = pd.read_csv("ratings.csv")
+    ratings = pd.read_csv("ratings.csv").iloc[:500000,:]
     print("Data read successfully.")
     
     users_avg_rates = {userID : {genre: 0 for genre in MovieTypes} for userID in ratings['userId'].unique()}
     movies_avg_rates = {movieID : 0 for movieID in movies['movieId']}
-    number_of_ratings = {userID : 0 for userID in ratings['userId'].unique()}
+    number_of_ratings_per_genre = {userID : {genre: 0 for genre in MovieTypes} for userID in ratings['userId'].unique()}
     number_of_ratings_per_movie = {movieID : 0 for movieID in movies['movieId']}
     
     print("Cleaning data...")    
@@ -33,12 +33,12 @@ def clean_data():
 
         movies_avg_rates[movieID] += rate
         number_of_ratings_per_movie[movieID] += 1
-        number_of_ratings[userID] += 1
         
         movie_genres = movies[movies['movieId'] == movieID]['genres'].values[0].split('|')
         for genre in movie_genres:
             if genre in MovieTypes:
                 users_avg_rates[userID][genre] += rate
+                number_of_ratings_per_genre[userID][genre] += 1
     print("Ratings retrieved successfully.")
     
     for movieID in movies_avg_rates:
@@ -47,34 +47,10 @@ def clean_data():
             
     for userID in users_avg_rates:
         for genre in users_avg_rates[userID]:
-            if number_of_ratings[userID] != 0:
-                users_avg_rates[userID][genre] /= number_of_ratings[userID]
-                
-    users_train = []
-    targets = []
-    print("Retieving users_train data...")
+            if number_of_ratings_per_genre[userID][genre] != 0:
+                users_avg_rates[userID][genre] /= number_of_ratings_per_genre[userID][genre]
     
-    for index, rating in tqdm.tqdm(ratings.iterrows(), total=ratings.shape[0]):
-        userID = rating["userId"]
-        userTotalRatingg = number_of_ratings[userID]
-        userAvgRating = rating[rating['userId'] == userID]['rating'].mean()
-        
-        userAvgRatingGenres = [0] * len(MovieTypes)
-        for genre in MovieTypes:
-            userAvgRatingGenres[MovieTypes.index(genre)] = users_avg_rates[userID][genre]
-            
-        userVector = [userID, userTotalRatingg, userAvgRating] + userAvgRatingGenres
-        users_train.append(userVector)
-        targets.append(rating['rating'])
-    
-    print("users_train data retrieved successfully.")
-        
-    users_train = pd.DataFrame(users_train, columns=['userId', 'totalRatings', 'avgRating'] + MovieTypes)
-    targets = pd.DataFrame(targets, columns=['rating'])
-    
-    print("Retrieving movies_train data...")
-    
-    movies_train = []
+    movies_vecs = []
     for index, movie in tqdm.tqdm(movies.iterrows(), total=movies.shape[0]):
         movie_ID = movie["movieId"]
         movie_year = extract_year(movie["title"])
@@ -87,14 +63,46 @@ def clean_data():
                 movie_vector[MovieTypes.index(genre)] = 1
             
         movie_vector = [movie_ID, movie_year, movieAvgRate] + movie_vector
-        movies_train.append(movie_vector)   
+        movies_vecs.append(movie_vector)   
         
     print("movies_train data retrieved successfully.")
+    movies_vecs = pd.DataFrame(movies_vecs, columns=['movieId', 'year', 'avg_ratings'] + MovieTypes)        
+
+                
+    users_train = []
+    movies_train = []
+    targets = []
+    print("Retieving users_train data...")
+    
+    for index, rating in tqdm.tqdm(ratings.iterrows(), total=ratings.shape[0]):
+        userID = rating["userId"]
+        userTotalNumRating = len(ratings[ratings['userId'] == userID])
+        userAvgRating = ratings[ratings['userId'] == userID]['rating'].mean()
         
-    movies_train = pd.DataFrame(movies_train, columns=['movieId', 'year'] + MovieTypes)        
+        userAvgRatingGenres = [0] * len(MovieTypes)
+        for genre in MovieTypes:
+            userAvgRatingGenres[MovieTypes.index(genre)] = users_avg_rates[userID][genre]
+            
+        userVector = [userID, userTotalNumRating, userAvgRating] + userAvgRatingGenres
         
+        movieVector = movies_vecs[movies_vecs['movieId'] == rating['movieId']].values[0]
+        
+        movies_train.append(movieVector)
+        users_train.append(userVector)
+        targets.append(rating['rating'])
+    
+    print("users_train data retrieved successfully.")
+    
+    movies_train = pd.DataFrame(movies_train, columns=['movieId', 'year', 'avg_ratings'] + MovieTypes)
+    users_train = pd.DataFrame(users_train, columns=['userId', 'totalRatings', 'avgRating'] + MovieTypes)
+    targets = pd.DataFrame(targets, columns=['rating'])
+    
+    print("Retrieving movies_train data...")
+    
+            
     users_train.to_csv("users_train.csv", index=False)
-    movies_train.to_csv("movies_train.csv", index=False)    
+    movies_vecs.to_csv("movies_vecs.csv", index=False)  
+    movies_train.to_csv("movies_train.csv", index=False)  
     targets.to_csv("y_train.csv", index=False)
     
     print("Data cleaned successfully.")    
