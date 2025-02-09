@@ -30,13 +30,6 @@ app.use("/user",session({
     }}
 ))
 
-app.use("/user",(req, res, next) => {
-    console.log("-----------------------------------");
-    console.log("Session data:", req.session);  // Log session data
-    next();
-});
-
-
 app.use("/user/auth/*", function auth(req, res, next){
     if(req.session.authorization){
         let token = req.session.authorization["accessToken"];
@@ -48,8 +41,6 @@ app.use("/user/auth/*", function auth(req, res, next){
             }else{
                 res.status(403).json({ message: "User not authenticated" });
             }
-            req.user = user;
-            next();
         });
     } else {
         res.status(403).json({ message: "User not logged in" });

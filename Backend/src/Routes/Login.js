@@ -18,7 +18,16 @@ router.post('/', (req,res) => {
                 { expiresIn: '1h' }
             );
             req.session.authorization = { accessToken: accessToken };
-            res.status(200).json({ message: 'User logged in successfully', auth: true });
+            GetID = `SELECT * FROM users WHERE email = $1;`;
+            db.query(GetID, [username], (err, results) => {
+                if (err) {
+                    console.error(err);
+                    return res.status(500).json({ message: 'Internal Server Error' });
+                }
+                let userId = results.rows[0].id;
+                req.session.userId = userId;
+                res.status(200).json({ message: 'User logged in successfully', auth: true });
+            });
         } else {
             res.status(401).json({ message: 'Invalid username or password', auth: false });
         }
