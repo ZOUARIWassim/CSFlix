@@ -3,7 +3,7 @@ from utils import *
 
 app = Flask(__name__)
 
-@app.route('/recommend', methods=['POST'])
+@app.route('/recommend/<userId>', methods=['POST'])
 def recommend():
     data = request.get_json()
     user = data.get('User', [])
