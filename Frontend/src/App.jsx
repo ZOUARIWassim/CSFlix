@@ -5,6 +5,7 @@ import './styles/App.scss'
 import SignUp from './pages/SignUp'
 import LogIn from './pages/LogIn'
 import Movies from './pages/Movies'
+import RecommendedMovies from './pages/RecommendedMovies'
 import ProtectedRoute from './components/ProtectedRoute'
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'; 
 
@@ -30,6 +31,11 @@ function App() {
           <Route path="/movies" element={
             <ProtectedRoute>
               <Movies />
+            </ProtectedRoute>
+          } />
+          <Route path="/recommended" element={
+            <ProtectedRoute>
+              <RecommendedMovies />
             </ProtectedRoute>
           } />
         </Routes>

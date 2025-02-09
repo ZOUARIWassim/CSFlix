@@ -72,6 +72,18 @@
                 &:hover{
                     color: #f1356d;
                 }
+                a {
+                    text-decoration: none; 
+                    color: inherit;  
+                    font-weight: inherit;  
+                    font-size: inherit;  
+                    font-family: inherit;  
+                    transition: color 0.3s;  
+            
+                    &:hover {
+                        color: #f1356d; 
+                    }
+                }
             }
             
     }

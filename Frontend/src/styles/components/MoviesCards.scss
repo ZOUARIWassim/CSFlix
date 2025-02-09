@@ -59,6 +59,18 @@
                     color: #535bf2;
                     font-family: "Poppins", serif;
                 }
+                .MovieRating{
+                    display: flex;
+                    gap: 2px;
+                    align-items: center;
+                    svg{
+                        color: #f1c40f;
+                        cursor: pointer;
+                        :hover{
+                            color: #f39c12;
+                        }
+                    }
+                }
             }
         }
     }

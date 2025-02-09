@@ -4,6 +4,7 @@ import { MdAccountCircle } from "react-icons/md";
 import { FaSearch } from "react-icons/fa";
 import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { Link } from 'react-router-dom';
 
 
 function Navbar({setQuerySearch}) {
@@ -22,7 +23,12 @@ function Navbar({setQuerySearch}) {
             </div>
             <div className="NavbarMenu">
                 <ul>
-                    <button>Home</button>
+                    <button>
+                        <Link to="/movies">All Movies</Link>
+                    </button>
+                    <button>
+                        <Link to="/recommended">Recommended</Link>
+                    </button>
                     <button onClick={logout}>Logout</button>
                 </ul>
                 <div className="Icon">

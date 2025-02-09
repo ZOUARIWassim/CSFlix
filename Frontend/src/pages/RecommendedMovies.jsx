@@ -10,7 +10,7 @@ function Movies() {
     return (
         <>
             <Navbar setQuerySearch = {setQuerySearch}/>
-            <MoviesCards querySerach = {querySerach} listTitle={"All Movies"} />
+            <MoviesCards querySerach = {querySerach} listTitle={"Recommended For You"} />
         </>
     );
 }
