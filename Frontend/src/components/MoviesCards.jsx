@@ -2,8 +2,9 @@ import React, { use } from "react";
 import "../styles/components/MoviesCards.scss";
 import { useEffect, useState } from "react";
 
-function MoviesCards() {
+function MoviesCards({ querySerach }) {
     const [movies, setMovies] = useState([]);
+    const [filteredMovies, setFilteredMovies] = useState([]);
 
     useEffect(() => {
         const BackendServer = import.meta.env.VITE_BackendServer;
@@ -19,8 +20,25 @@ function MoviesCards() {
 
         getMovies().then((data) => {
             setMovies(data);
+            setFilteredMovies(data);
         });
     }, []);
+
+    const filterMovies = (movies, query) => {
+        if (!query) {
+            return movies;
+        }
+
+        return movies.filter((movie) => {
+            const movieName = movie.title.toLowerCase();
+            return movieName.includes(query.toLowerCase());
+        });
+    }
+
+    useEffect(() => {
+        const filteredMovies = filterMovies(movies, querySerach);
+        setFilteredMovies(filteredMovies);
+    }, [querySerach]);
 
     return (
         <div className="MainContainer">
@@ -28,7 +46,7 @@ function MoviesCards() {
                 <p>Recommended For You</p>
             </div>
             <div className="MoviesGrid">
-                {movies.map((movie) => (
+                {filteredMovies.map((movie) => (
                     <div key={movie.id} className="MovieCard">
                         <div className="MovieImg">
                             <img src={`https://image.tmdb.org/t/p/w1280${movie.backdrop_path}`} alt={"No Poster is Available"} />
