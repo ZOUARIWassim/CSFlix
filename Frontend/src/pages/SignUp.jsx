@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import '../styles/pages/LogIn.scss';
 import { FaUserAlt, FaLock } from "react-icons/fa";
 import {Link} from 'react-router-dom';
+import {useAuth} from '../context/AuthContext';
+;
 
 const SignUp = () => {
     const [email, setEmail] = useState('');
@@ -9,6 +11,7 @@ const SignUp = () => {
     const [repassword, setRepassword] = useState('');
     const [message, setMessage] = useState('');
     const [isIncorrect, setIsIncorrect] = useState(false);
+    const { login } = useAuth();
 
     const handleSignin = async (e) => {
         e.preventDefault();
@@ -25,15 +28,15 @@ const SignUp = () => {
                         },
                         body: JSON.stringify({ username: email, password }),
                         credentials: 'include',
-
-
-                        
                     });
 
                     const data = await response.json();
 
                     if (response.ok) {
                         setMessage(data.message);
+                        if (data.message === 'User created successfully') {
+                            login(email, password);
+                        }
                     }
                 }
             }else{

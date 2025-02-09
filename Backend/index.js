@@ -23,12 +23,23 @@ app.use(cors({
 app.use("/user",session({
     secret: process.env.SESSION_SECRET,
     resave: true,
-    saveUninitialized: true}
+    saveUninitialized: true,
+    cookie: { 
+        secure: false,         
+        maxAge: 3600000         
+    }}
 ))
 
+app.use("/user",(req, res, next) => {
+    console.log("-----------------------------------");
+    console.log("Session data:", req.session);  // Log session data
+    next();
+});
+
+
 app.use("/user/auth/*", function auth(req, res, next){
-    if(res.session.authorization){
-        let token = res.session.authorization["accessToken"];
+    if(req.session.authorization){
+        let token = req.session.authorization["accessToken"];
 
         jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
             if(!err){

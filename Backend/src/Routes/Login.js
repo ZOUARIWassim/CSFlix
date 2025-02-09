@@ -9,7 +9,7 @@ router.post('/', (req,res) => {
     db.query(getQuery, [username, password], (err, results) => {
         if (err) {
             console.error(err);
-            res.status(500).json({ message: 'Internal server error' });
+            res.status(500).json({ message: 'An error occurred while logging in', auth: false });
         } else if (results.rows.length > 0) {
             req.session.user = username;
             let accessToken = jwt.sign(
@@ -18,9 +18,9 @@ router.post('/', (req,res) => {
                 { expiresIn: '1h' }
             );
             req.session.authorization = { accessToken: accessToken };
-            res.status(200).json({ message: 'User logged in successfully' });
+            res.status(200).json({ message: 'User logged in successfully', auth: true });
         } else {
-            res.status(401).json({ message: 'Invalid username or password' });
+            res.status(401).json({ message: 'Invalid username or password', auth: false });
         }
     })
 })

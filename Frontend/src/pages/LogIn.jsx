@@ -1,5 +1,6 @@
 import React from "react";
 import '../styles/pages/LogIn.scss';
+import {useAuth} from '../context/AuthContext';
 import { FaUserAlt } from "react-icons/fa";
 import { FaLock } from "react-icons/fa";
 import { useState } from "react";
@@ -9,37 +10,13 @@ const LogIn = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [message, setMessage] = useState('');
+    const {login} = useAuth();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const BackendServer = import.meta.env.VITE_BackendServer;
-        try {
-            if (email && password) {
-                const response = await fetch(BackendServer + '/user/login', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ username : email, password }),
-                    credentials: 'include',
-                });
-
-                const data = await response.json();
-
-                if (response.ok) {
-                    setMessage(data.message);
-                }
-                else {
-                    setMessage(data.message);;
-                }
-            }else{
-                setMessage('Please fill all the fields');
-            }
-        }
-        catch (error) {
-            console.error("Error logging in:", error);
-            setMessage('An error occurred. Please try again.');
-        }
+        const response = await login(email, password);
+        setMessage(response.message);
+        
     }
 
     return (
