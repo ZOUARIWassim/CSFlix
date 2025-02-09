@@ -11,7 +11,7 @@ router.use('/logout', logOutRoutes);
 
 router.get('/auth/profile', (req, res) => {
     if (req.session.user) {
-        res.status(200).json({ auth: true });
+        res.status(200).json({ auth: true, userId: req.session.userId });
     } else {
         res.status(401).json({ auth: false });
     }

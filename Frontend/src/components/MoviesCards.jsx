@@ -6,10 +6,11 @@ import { FaStar } from "react-icons/fa";
 function MoviesCards({ querySerach, listTitle }) {
     const [movies, setMovies] = useState([]);
     const [filteredMovies, setFilteredMovies] = useState([]);
-    const [recommendedMovies, setRecommendedMovies] = useState([]);
 
     useEffect(() => {
         const BackendServer = import.meta.env.VITE_BackendServer;
+        const APIServer = import.meta.env.VITE_APIServer;
+
         const getMovies = async () => {
             try {
                 const response = await fetch(BackendServer + '/movies/getMovies');
@@ -20,10 +21,80 @@ function MoviesCards({ querySerach, listTitle }) {
             }
         };
 
-        getMovies().then((data) => {
-            setMovies(data);
-            setFilteredMovies(data);
-        });
+        const getUserId = async () => {
+            try {
+                const response = await fetch(BackendServer + '/user/auth/profile', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    credentials: 'include',
+                });
+                const data = await response.json();
+                if (data.auth) {
+                    return data.userId;
+                }
+            } catch (error) {
+                console.error("Error fetching user ID:", error);
+            }
+        };
+
+        const getRecommendedMovies = async () => {
+            try {
+                const userId = await getUserId();
+
+                const response = await fetch(APIServer + `/recommend/${userId}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+                const data = await response.json();
+                if (data.error) {
+                    console.error(data.error);
+                    return [];
+                }
+                else {
+                    const moviesFetched = [];
+                    for (const movieId of data.tmdbIds) {
+                        const url = BackendServer + `/movies/getMovie/${movieId}`;
+                        const options = {
+                            method: 'GET',
+                            headers: {
+                                accept: 'application/json',
+                            },
+                            credentials: 'include',
+                        };
+                        const response = await fetch(url, options);
+                        if (response.ok) {
+                            const data = await response.json();
+                            moviesFetched.push(data);
+                        } else {
+                            console.error('An error occurred while fetching data');
+                        }
+                    }
+                    return moviesFetched;
+                    }
+                
+            } catch (error) {
+                console.error("Error fetching recommended movies:", error);
+            }
+        };
+
+
+        if (listTitle === "Recommended For You") {
+            const userId = localStorage.getItem('userId');
+            getRecommendedMovies().then((data) => {
+                setMovies(data);
+                setFilteredMovies(data);
+            }
+            );
+        }else{
+            getMovies().then((data) => {
+                setMovies(data);
+                setFilteredMovies(data);
+            });
+        }
     }, []);
 
     const filterMovies = (movies, query) => {
@@ -101,7 +172,7 @@ function MoviesCards({ querySerach, listTitle }) {
                         </div>
                     </div>
                 ))}
-                {listTitle === "Recommended For You" && recommendedMovies.map((movie) => (
+                {listTitle === "Recommended For You" && filteredMovies.map((movie) => (
                     <div key={movie.id} className="MovieCard">
                         <div className="MovieImg">
                             <img src={`https://image.tmdb.org/t/p/w1280${movie.backdrop_path}`} alt={"No Poster is Available"} />

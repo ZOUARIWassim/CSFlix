@@ -1,15 +1,16 @@
 from flask import Flask, request
 from utils import *
+from flask_cors import CORS
 
 app = Flask(__name__)
 
-@app.route('/recommend/<userId>', methods=['POST'])
-def recommend():
-    data = request.get_json()
-    user = data.get('User', [])
-    user = pd.DataFrame([user])
-    MovieIDs = Recommend(user)
-    return {'MovieIDs': MovieIDs.tolist()}
+CORS(app, resources={r"/*": {"origins": "http://localhost:5173"}})
+
+@app.route('/recommend/<userId>', methods=['GET'])
+def recommend(userId):
+    userVec = getuserData(userId)
+    tdmbIds = Recommend(userVec)
+    return tdmbIds
 
 if __name__ == '__main__':
     app.run(port=5000, debug=True)

@@ -39,7 +39,7 @@ router.get('/getMovies', async (req, res) => {
     }
 });
 
-router.post('/getMovie/:id', async (req, res) => {
+router.get('/getMovie/:id', async (req, res) => {
     const { id } = req.params;
     const url = `https://api.themoviedb.org/3/movie/${id}?language=en-US`;
     const TMDB_API_KEY = process.env.TMDB_API_KEY;
@@ -50,7 +50,6 @@ router.post('/getMovie/:id', async (req, res) => {
             Authorization: TMDB_API_KEY
         }
     };
-
     const response = await fetch(url, options);
 
     if (response.ok) {
@@ -58,6 +57,7 @@ router.post('/getMovie/:id', async (req, res) => {
         res.json(data);
     } else {
         console.error('An error occurred while fetching data');
+        res.status(500).json({ error: 'Internal Server Error' });
     }
 });
 module.exports = router;
